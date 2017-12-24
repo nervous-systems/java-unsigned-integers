@@ -216,7 +216,7 @@ public abstract class Properties<T extends UInt<T>> {
 
   @Test
   public void shiftLeft() {
-    for(int i = 0; i < SAMPLE_SMALL; i++, cycle()) {
+    for(int i = 0; i < SAMPLE_BIG; i++, cycle()) {
       for(int places = 0; places <= x.ints.length * 32; places++)
         eq(trunc(xb.shiftLeft(places)), x.shiftLeft(places));
     }
@@ -224,7 +224,7 @@ public abstract class Properties<T extends UInt<T>> {
 
   @Test
   public void shiftRight() {
-    for(int i = 0; i < SAMPLE_SMALL; i++, cycle())
+    for(int i = 0; i < SAMPLE_BIG; i++, cycle())
       for(int places = 0; places <= x.ints.length * 32; places++)
         eq(xb.shiftRight(places), x.shiftRight(places));
   }

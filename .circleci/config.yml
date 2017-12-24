@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     environment:
-      - MAVEN_OPTS: -Xmx1024m
+      - MAVEN_OPTS: -Xmx2048m
     steps:
       - checkout
       - restore_cache:
@@ -16,4 +16,9 @@ jobs:
           paths:
             - ~/.m2
           key: deps-{{ checksum "pom.xml" }}
-      - run: mvn integration-test
+      - run:
+          command: mvn -Dtest=TestUInt128 -e test
+          working_directory: juint
+      - run:
+          command: mvn -Dtest=TestUInt256 -e test
+          working_directory: juint
