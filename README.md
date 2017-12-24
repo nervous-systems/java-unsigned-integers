@@ -1,4 +1,4 @@
-# JUInt
+# JUInt [![CircleCI](https://circleci.com/gh/nervous-systems/juint/tree/master.png?style=shield&circle-token=6f13ee621838019658e21ab69a65f3fe7743401f)](https://circleci.com/gh/nervous-systems/juint/tree/master)
 
 Optimized, immutable Java implementations of fixed-width, unsigned
 integers.  Currently 128 bit (`UInt128`) and 256 bit (`UInt256`) variants
