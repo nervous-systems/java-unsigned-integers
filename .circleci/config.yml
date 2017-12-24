@@ -3,7 +3,8 @@ jobs:
   build:
     docker:
       - image: circleci/openjdk:8-jdk
-
+    environment:
+      - MAVEN_OPTS: -Xmx256m
     steps:
       - checkout
       - restore_cache:
