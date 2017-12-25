@@ -4,16 +4,21 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     environment:
-      - MAVEN_OPTS: -Xmx256m
+      - MAVEN_OPTS: -Xmx2048m
     steps:
       - checkout
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "pom.xml" }}
-          - v1-dependencies-
+          - deps-{{ checksum "pom.xml" }}
+          - deps-
       - run: cd juint/ && mvn dependency:go-offline
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-dependencies-{{ checksum "pom.xml" }}
-      - run: mvn integration-test
+          key: deps-{{ checksum "pom.xml" }}
+      - run:
+          command: mvn -Dtest=TestUInt128 -e test
+          working_directory: juint
+      - run:
+          command: mvn -Dtest=TestUInt256 -e test
+          working_directory: juint

@@ -4,6 +4,10 @@ import java.math.BigInteger;
 
 /**
  * Represents unsigned values less than {@code 2**128}.
+ *
+ * As indicated by the type signatures, arithmetic operations are not applicable
+ * to types of other widths in this package.  Copy constructors can be used to
+ * explicitly promote or truncate values for the purposes of interoperability.
  */
 public final class UInt128 extends UInt<UInt128> {
   static final int MAX_WIDTH = 4;
@@ -24,7 +28,16 @@ public final class UInt128 extends UInt<UInt128> {
    * will be considered.  Leaves {@code ints} untouched.
    */
   public UInt128(final int[] ints) {
-    super(Arrays.stripLeadingZeroes(ints, Math.max(0, ints.length - MAX_WIDTH)));
+    super(ints, MAX_WIDTH);
+  }
+
+  /**
+   * Construct from a {@link UInt256}.
+   *
+   * Excessively wide numbers will be truncated.
+   */
+  public UInt128(final UInt256 other) {
+    super(other, MAX_WIDTH);
   }
 
   /**

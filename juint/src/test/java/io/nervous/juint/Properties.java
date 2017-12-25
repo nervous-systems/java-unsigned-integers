@@ -73,11 +73,11 @@ public abstract class Properties<T extends UInt<T>> {
 
   private static final int SMALL_MAX = Short.MAX_VALUE;
 
-  T random(int n) {
+  int[] randomints(int n) {
     if(n == 0)
-      return zero;
+      return new int[0];
     if(rnd.nextFloat() < 0.025)
-      return construct(Arrays.maxValue(n));
+      return Arrays.maxValue(n);
 
     int[] ints          = new int[n];
     final boolean small = rnd.nextFloat() < 0.25;
@@ -86,7 +86,11 @@ public abstract class Properties<T extends UInt<T>> {
     } while(ints[0] == 0);
     for(int i = 1; i < n; i++)
       ints[i] = small ? rnd.nextInt(SMALL_MAX) : rnd.nextInt();
-    return construct(ints);
+    return ints;
+  }
+
+  T random(int n) {
+    return construct(randomints(n));
   }
 
   T randomNonZero() {
@@ -106,6 +110,13 @@ public abstract class Properties<T extends UInt<T>> {
 
   BigInteger big(T o)    { return o.toBigInteger();      }
   BigInteger big(long i) { return BigInteger.valueOf(i); }
+  BigInteger big(int[] ints) {
+    BigInteger out = BigInteger.ZERO;
+    for(int i = 0; i < ints.length; i++) {
+      out = out.shiftLeft(32).or(BigInteger.valueOf(ints[i] & Arrays.LONG));
+    }
+    return out;
+  }
 
   BigInteger trunc(BigInteger u) {
     BigInteger mask = BigInteger.ONE.shiftLeft(32 * maxWidth())
@@ -205,7 +216,7 @@ public abstract class Properties<T extends UInt<T>> {
 
   @Test
   public void shiftLeft() {
-    for(int i = 0; i < SAMPLE_SMALL; i++, cycle()) {
+    for(int i = 0; i < SAMPLE_BIG; i++, cycle()) {
       for(int places = 0; places <= x.ints.length * 32; places++)
         eq(trunc(xb.shiftLeft(places)), x.shiftLeft(places));
     }
@@ -213,7 +224,7 @@ public abstract class Properties<T extends UInt<T>> {
 
   @Test
   public void shiftRight() {
-    for(int i = 0; i < SAMPLE_SMALL; i++, cycle())
+    for(int i = 0; i < SAMPLE_BIG; i++, cycle())
       for(int places = 0; places <= x.ints.length * 32; places++)
         eq(xb.shiftRight(places), x.shiftRight(places));
   }
@@ -303,6 +314,14 @@ public abstract class Properties<T extends UInt<T>> {
     for(int i = 0; i < SAMPLE_BIG; i++, cycle()) {
       int exp = rnd.nextInt(300);
       eq(trunc(xb.pow(exp)), x.pow(exp));
+    }
+  }
+
+  @Test
+  public void fromArrayTruncate() {
+    for(int i = 0; i < SAMPLE_SMALL; i++) {
+      int[] ints = randomints(maxWidth() * 2);
+      eq(trunc(big(ints)), construct(ints));
     }
   }
 

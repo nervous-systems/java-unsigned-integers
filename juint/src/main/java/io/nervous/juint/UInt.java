@@ -20,12 +20,20 @@ abstract class UInt<T extends UInt>
     this.ints = ints;
   }
 
+  UInt(final int[] ints, final int maxWidth) {
+    this(Arrays.stripLeadingZeroes(ints, Math.max(0, ints.length - maxWidth)));
+  }
+
+  UInt(final UInt other, final int maxWidth) {
+    this(other.ints, maxWidth);
+  }
+
   UInt(final String s, final int radix, final int maxWidth) {
     this.ints = StringUtil.fromString(s, radix, maxWidth);
   }
 
   UInt(final BigInteger b, final int maxWidth) {
-    this(Arrays.fromBigInteger(b, maxWidth));
+    this(Arrays.fromBigInteger(b, maxWidth), maxWidth);
   }
 
   /**
