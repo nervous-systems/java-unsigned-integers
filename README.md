@@ -1,4 +1,4 @@
-# JUInt [![CircleCI](https://circleci.com/gh/nervous-systems/juint/tree/master.png?style=shield&circle-token=6f13ee621838019658e21ab69a65f3fe7743401f)](https://circleci.com/gh/nervous-systems/juint/tree/master)
+# JUInt [![CircleCI](https://circleci.com/gh/nervous-systems/juint/tree/master.png?style=shield&circle-token=6f13ee621838019658e21ab69a65f3fe7743401f)](https://circleci.com/gh/nervous-systems/juint/tree/master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.nervous/juint/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.nervous/juint)
 
 Optimized, immutable Java implementations of fixed-width, unsigned integers.
 Currently 128 bit

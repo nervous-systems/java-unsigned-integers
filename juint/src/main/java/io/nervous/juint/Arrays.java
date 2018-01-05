@@ -47,14 +47,14 @@ final class Arrays {
     return 0;
   }
 
-  static int compare(final int[] ints, final BigInteger other) {
+  static int compare(final int[] ints, final BigInteger other, final int maxWidth) {
     final int il = bitLength(ints), bl = other.bitLength();
     if(il < bl)
       return -1;
     if(il > bl)
       return 1;
 
-    return compare(ints, fromBigInteger(other, ints.length));
+    return compare(ints, from(other, maxWidth));
   }
 
   static int[] stripLeadingZeroes(final int[] ints, int strip) {
@@ -331,7 +331,7 @@ final class Arrays {
     while (carry && 0 < longi)
       carry = ++(out[--longi]) == 0;
 
-    if(carry && out.length < maxWidth) {
+    if(carry && (out.length < maxWidth || maxWidth == -1)) {
       int grown[] = new int[out.length + 1];
       grown[0]    = 1;
 
@@ -367,6 +367,26 @@ final class Arrays {
     return out[0] == 0 ? stripLeadingZeroes(out, 1) : out;
   }
 
+  static int[] mulmod(int[] a, int[] b, final int[] c) {
+    if(a.length < b.length) {
+      int[] tmp = a; a = b; b = tmp;
+    }
+    if(b.length == 0)
+      return ZERO;
+    final int[] mul = mul(a, a.length, b, b.length);
+    final int   cmp = compare(mul, c);
+    return (cmp < 0 ? mul : (cmp == 0 ? ZERO : mod(mul, c)));
+  }
+
+  static int[] addmod(int[] a, int[] b, final int[] c) {
+    if(a.length < b.length) {
+      int[] tmp = a; a = b; b = tmp;
+    }
+    final int[] add = b.length == 0 ? a : add(a, b, -1);
+    final int   cmp = compare(add, c);
+    return (cmp < 0 ? add : (cmp == 0 ? ZERO : mod(add, c)));
+  }
+
   static int[] multiply(int[] a, int[] b, final int maxWidth) {
     if(a.length < b.length) {
       int[] tmp = a; a = b; b = tmp;
@@ -381,7 +401,7 @@ final class Arrays {
     final int outlen = alen + blen;
     if(maxWidth < outlen)
       return mul(a, alen, b, blen, maxWidth, outlen - maxWidth);
-    return mul(a, alen, b, blen, maxWidth);
+    return mul(a, alen, b, blen);
   }
 
   static int[] mul(int[] a, final int alen, int b, int maxWidth) {
@@ -438,7 +458,7 @@ final class Arrays {
   }
 
   static int[] mul(
-    final int[] a, final int alen, final int[] b, final int blen, final int maxWidth) {
+    final int[] a, final int alen, final int[] b, final int blen) {
 
     final int outlen = alen + blen;
     final int astart = alen - 1, bstart = blen - 1;
@@ -666,7 +686,7 @@ final class Arrays {
 
   private static BigInteger BIG_INT = BigInteger.valueOf(LONG);
 
-  static int[] fromBigInteger(BigInteger b, int maxWidth) {
+  static int[] from(BigInteger b, final int maxWidth) {
     int n            = Math.min((b.bitLength() >>> 5) + 1, maxWidth);
     final int[] ints = new int[n];
     while(0 < n) {
@@ -674,6 +694,28 @@ final class Arrays {
       b         = b.shiftRight(32);
     }
     return (0 < ints.length && ints[0] == 0) ? stripLeadingZeroes(ints) : ints;
+  }
+
+  static int[] from(final byte[] bytes, final int[] maxValue) {
+    int len = bytes.length;
+
+    if(len == 0)
+      return ZERO;
+
+    int skip;
+    for (skip = 0; skip < len && bytes[skip] == 0; skip++)
+      ;
+
+    final int ints  = Math.min(maxValue.length, ((len - skip) + 3) >>> 2);
+    final int[] out = new int[ints];
+    int b = len - 1;
+    for(int i = ints - 1; 0 <= i; i--) {
+      out[i]   = bytes[b--] & 0xff;
+      int copy = Math.min(3, b - skip + 1);
+      for(int j = 8; j <= (copy << 3); j += 8)
+        out[i] |= ((bytes[b--] & 0xff) << j);
+    }
+    return out;
   }
 
   static int[] maxValue(final int maxWidth) {

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 
 public abstract class Properties<T extends UInt<T>> {
   abstract T   construct(int[]      ints);
+  abstract T   construct(byte[]     bytes);
   abstract T   construct(BigInteger b);
   abstract T   construct(long       v);
   abstract T   construct(String     s, int radix);
@@ -101,10 +102,11 @@ public abstract class Properties<T extends UInt<T>> {
     return x;
   }
 
-  void eq(BigInteger a, UInt b) {
+  void eq(BigInteger a, T b) {
     assertTrue(
       ("UInt<" + java.util.Arrays.toString(b.ints) +
-       "> != Big<" + java.util.Arrays.toString(construct(a).ints) + ">"),
+       "> != Big<" + java.util.Arrays.toString(construct(a).ints) +
+       ">\n(UInt<" + b + "> != Big<" + a + ">)"),
       b.equals(a));
   }
 
@@ -129,6 +131,20 @@ public abstract class Properties<T extends UInt<T>> {
     assertEquals(construct(new int[]{-1, -1}), construct(-1L));
     assertEquals(zero,                         construct(0L));
     assertEquals(one,                          construct(1L));
+  }
+
+  @Test
+  public void bytesCtor() {
+    for(int i = 0; i < SAMPLE_MED; i++, cycle())
+      assertEquals(x, construct(x.toByteArray()));
+  }
+
+  @Test
+  public void bytesCtorTruncate() {
+    for(int i = 0; i < SAMPLE_BIG; i++) {
+      BigInteger b = new BigInteger(32 * maxWidth() * 2, rnd);
+      eq(trunc(b), construct(b.toByteArray()));
+    }
   }
 
   @Test
@@ -281,6 +297,14 @@ public abstract class Properties<T extends UInt<T>> {
   public void multiplySquare() {
     for(int i = 0; i < SAMPLE_BIG; i++, cycle()) {
       eq(trunc(xb.multiply(xb)), x.multiply(x));
+    }
+  }
+
+  @Test
+  public void mulmod() {
+    for(int i = 0; i < SAMPLE_BIG; i++, cycle()) {
+      T mod = randomNonZero();
+      eq(xb.multiply(yb).mod(big(mod)), x.mulmod(y, mod));
     }
   }
 
@@ -517,8 +541,8 @@ public abstract class Properties<T extends UInt<T>> {
   @Test
   public void compareTo() {
     for(int i = 0; i < SAMPLE_MED; i++, cycle()) {
-      assertEquals(x.compareTo(y), xb.compareTo(yb));
-      assertEquals(y.compareTo(x), yb.compareTo(xb));
+      assertEquals(xb.compareTo(yb), x.compareTo(y));
+      assertEquals(yb.compareTo(xb), y.compareTo(x));
     }
   }
 
@@ -632,7 +656,7 @@ public abstract class Properties<T extends UInt<T>> {
   }
 
   @Test(expected=ArithmeticException.class)
-  public void tesBtitNegative() {
+  public void testBitNegative() {
     zero.testBit(-1);
   }
 
@@ -651,6 +675,14 @@ public abstract class Properties<T extends UInt<T>> {
   public void add() {
     for(int i = 0; i < SAMPLE_BIG; i++, cycle())
       eq(trunc(xb.add(yb)), x.add(y));
+  }
+
+  @Test
+  public void addmod() {
+    for(int i = 0; i < SAMPLE_BIG; i++, cycle()) {
+      T mod = randomNonZero();
+      eq(xb.add(yb).mod(big(mod)), x.addmod(y, mod));
+    }
   }
 
   @Test
