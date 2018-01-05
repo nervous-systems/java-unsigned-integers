@@ -22,13 +22,23 @@ public final class UInt256 extends UInt<UInt256> {
   public static UInt256 TWO  = new UInt256(Arrays.TWO);
 
   /**
-   * Construct from an big-endian {@code int} array.
+   * Construct from a big-endian {@code int} array.
    *
-   * If {@link ints} exceeds {@link MAX_VALUE}, only the maximum prefix
+   * If {@code ints} exceeds {@link MAX_VALUE}, only the maximum prefix
    * will be considered.  Leaves {@code ints} untouched.
    */
   public UInt256(final int[] ints) {
     super(ints, MAX_WIDTH);
+  }
+
+  /**
+   * Construct from a big-endian {@code byte} array.
+   *
+   * If {@code bytes} exceeds {@link MAX_VALUE}, only the maximum prefix
+   * will be considered.  Leaves {@code bytes} untouched.
+   */
+  public UInt256(final byte[] bytes) {
+    super(bytes, MAX_VALUE);
   }
 
   /**
@@ -139,6 +149,14 @@ public final class UInt256 extends UInt<UInt256> {
              new UInt256(Arrays.add(ints, other.ints, MAX_WIDTH))));
   }
 
+  public UInt256 addmod(final UInt256 add, final UInt256 mod) {
+    if(mod.isZero())
+      throw new ArithmeticException("div/mod by zero");
+    if(isZero() && add.isZero())
+      return ZERO;
+    return new UInt256(Arrays.addmod(ints, add.ints, mod.ints));
+  }
+
   public UInt256 subtract(final UInt256 other) {
     if(other.isZero())
       return this;
@@ -154,6 +172,12 @@ public final class UInt256 extends UInt<UInt256> {
     if(ints.length == 0 || other.ints.length == 0)
       return ZERO;
     return new UInt256(Arrays.multiply(ints, other.ints, MAX_WIDTH));
+  }
+
+  public UInt256 mulmod(final UInt256 mul, final UInt256 mod) {
+    if(mod.isZero())
+      throw new ArithmeticException("div/mod by zero");
+    return new UInt256(Arrays.mulmod(ints, mul.ints, mod.ints));
   }
 
   public UInt256 pow(final int exp) {
@@ -202,5 +226,11 @@ public final class UInt256 extends UInt<UInt256> {
 
     final int[][] qr = Arrays.divmod(ints, other.ints);
     return new UInt256[]{new UInt256(qr[0]), new UInt256(qr[1])};
+  }
+
+  public boolean equals(final Object other) {
+    if(other instanceof BigInteger)
+      return Arrays.compare(ints, (BigInteger)other, MAX_WIDTH) == 0;
+    return super.equals(other);
   }
 }

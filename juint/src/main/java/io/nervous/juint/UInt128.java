@@ -22,13 +22,23 @@ public final class UInt128 extends UInt<UInt128> {
   public static UInt128 TWO  = new UInt128(Arrays.TWO);
 
   /**
-   * Construct from an big-endian {@code int} array.
+   * Construct from a big-endian {@code int} array.
    *
-   * If {@link ints} exceeds {@link MAX_VALUE}, only the maximum prefix
+   * If {@code ints} exceeds {@link MAX_VALUE}, only the maximum prefix
    * will be considered.  Leaves {@code ints} untouched.
    */
   public UInt128(final int[] ints) {
     super(ints, MAX_WIDTH);
+  }
+
+  /**
+   * Construct from a big-endian {@code byte} array.
+   *
+   * If {@code bytes} exceeds {@link MAX_VALUE}, only the maximum prefix
+   * will be considered.  Leaves {@code bytes} untouched.
+   */
+  public UInt128(final byte[] bytes) {
+    super(bytes, MAX_VALUE);
   }
 
   /**
@@ -141,6 +151,12 @@ public final class UInt128 extends UInt<UInt128> {
              new UInt128(Arrays.add(ints, other.ints, MAX_WIDTH))));
   }
 
+  public UInt128 addmod(final UInt128 add, final UInt128 mod) {
+    if(mod.isZero())
+      throw new ArithmeticException("div/mod by zero");
+    return new UInt128(Arrays.addmod(ints, add.ints, mod.ints));
+  }
+
   public UInt128 subtract(final UInt128 other) {
     if(other.isZero())
       return this;
@@ -157,6 +173,12 @@ public final class UInt128 extends UInt<UInt128> {
       return ZERO;
 
     return new UInt128(Arrays.multiply(ints, other.ints, MAX_WIDTH));
+  }
+
+  public UInt128 mulmod(final UInt128 mul, final UInt128 mod) {
+    if(mod.isZero())
+      throw new ArithmeticException("div/mod by zero");
+    return new UInt128(Arrays.mulmod(ints, mul.ints, mod.ints));
   }
 
   public UInt128 pow(final int exp) {
@@ -205,5 +227,11 @@ public final class UInt128 extends UInt<UInt128> {
 
     final int[][] qr = Arrays.divmod(ints, other.ints);
     return new UInt128[]{new UInt128(qr[0]), new UInt128(qr[1])};
+  }
+
+  public boolean equals(final Object other) {
+    if(other instanceof BigInteger)
+      return Arrays.compare(ints, (BigInteger)other, MAX_WIDTH) == 0;
+    return super.equals(other);
   }
 }

@@ -3,7 +3,7 @@ package io.nervous.juint;
 import java.math.BigInteger;
 import static io.nervous.juint.Arrays.LONG;
 
-abstract class UInt<T extends UInt>
+public abstract class UInt<T extends UInt>
   extends    java.lang.Number
   implements Comparable<T> {
 
@@ -33,7 +33,11 @@ abstract class UInt<T extends UInt>
   }
 
   UInt(final BigInteger b, final int maxWidth) {
-    this(Arrays.fromBigInteger(b, maxWidth), maxWidth);
+    this(Arrays.from(b, maxWidth), maxWidth);
+  }
+
+  UInt(final byte[] bytes, final UInt maxValue) {
+    this(Arrays.from(bytes, maxValue.ints), maxValue.ints.length);
   }
 
   /**
@@ -52,6 +56,12 @@ abstract class UInt<T extends UInt>
    * {@code this * other}
    */
   public abstract T multiply(T other);
+  /**
+   * {@code (this * mul) % mod}
+   *
+   * The multiply operation is unbounded by the type's width.
+   */
+  public abstract T mulmod(T mul, T mod);
   /**
    * {@code this ** exp}
    */
@@ -84,6 +94,12 @@ abstract class UInt<T extends UInt>
    * {@code this + other}
    */
   public abstract T add(T other);
+  /**
+   * {@code (this + add) % mod}
+   *
+   * The add operation is unbounded by the type's width.
+   */
+  public abstract T addmod(T add, T mod);
   /**
    * {@code this - other}
    */
@@ -159,7 +175,7 @@ abstract class UInt<T extends UInt>
   }
 
   /**
-   * Return a hash code identical to the equivalent OpenJDK {@link BigInteger}.
+   * Return a hash code identical to the equivalent OpenJDK {@code BigInteger}.
    */
   public int hashCode() {
     int out = 0;
@@ -171,8 +187,6 @@ abstract class UInt<T extends UInt>
   }
 
   public boolean equals(final Object other) {
-    if(other instanceof BigInteger)
-      return Arrays.compare(ints, (BigInteger)other) == 0;
     if(other instanceof UInt)
       return Arrays.compare(ints, ((UInt)other).ints) == 0;
     return false;
@@ -288,8 +302,8 @@ abstract class UInt<T extends UInt>
   /**
    * String representation in the given radix.
    *
-   * {@code radix} values outside {@link Character.MIN_RADIX} and
-   * {@link Character.MAX_RADIX} are substituted with {@code 10}.
+   * {@code radix} values outside {@code Character.MIN_RADIX} and
+   * {@code Character.MAX_RADIX} are substituted with {@code 10}.
    */
   public final String toString(int radix) {
     if(isZero())

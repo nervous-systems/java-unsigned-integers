@@ -8,12 +8,51 @@
   <parent>
     <groupId>io.nervous</groupId>
     <artifactId>juint-parent</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <groupId>io.nervous</groupId>
   <artifactId>juint</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <description>Optimized, immutable, unsigned wide integer types.</description>
+  <url>https://github.com/nervous-systems/juint</url>
+
+  <licenses>
+    <license>
+      <name>GPL 2.0 with OpenJDK classpath exception</name>
+      <url>http://openjdk.java.net/legal/gplv2+ce.html</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Moe Aboulkheir</name>
+      <email>moe@nervous.io</email>
+      <organization>Nervous Systems, Ltd.</organization>
+      <organizationUrl>https://nervous.io</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/nervous-systems/juint.git</connection>
+    <developerConnection>
+      scm:git:ssh://github.com:nervous-systems/juint.git
+    </developerConnection>
+    <url>https://github.com/nervous-systems/juint</url>
+  </scm>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -47,6 +86,49 @@
           <target>1.8</target>
           <compilerArgument>-Xlint:unchecked</compilerArgument>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
