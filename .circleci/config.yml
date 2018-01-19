@@ -5,6 +5,7 @@ jobs:
       - image: circleci/openjdk:8-jdk
     environment:
       - MAVEN_OPTS: -Xmx2048m
+      - JUINT_SAMPLE_FACTOR: 0.25
     steps:
       - checkout
       - restore_cache:

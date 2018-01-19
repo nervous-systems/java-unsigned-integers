@@ -38,10 +38,10 @@ public abstract class Properties<T extends UInt<T>> {
   @BeforeClass
   public static void init() {
     String v     = System.getenv("JUINT_SAMPLE_FACTOR");
-    int i        = v == null ? 1 : Integer.parseInt(v);
-    SAMPLE_BIG   = 4096 * i;
-    SAMPLE_MED   = 2048 * i;
-    SAMPLE_SMALL = 1024 * i;
+    double i     = v == null ? 1.0 : Double.parseDouble(v);
+    SAMPLE_BIG   = (int)(4096 * i);
+    SAMPLE_MED   = (int)(2048 * i);
+    SAMPLE_SMALL = (int)(1024 * i);
     System.out.println("Max interations: " + SAMPLE_BIG);
   }
 
