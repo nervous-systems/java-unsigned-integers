@@ -4,7 +4,7 @@ Optimized, immutable Java implementations of fixed-width, unsigned integers.
 Currently 128 bit
 ([UInt128](https://nervous.io/doc/juint/io/nervous/juint/UInt128.html)) and 256
 bit ([UInt256](https://nervous.io/doc/juint/io/nervous/juint/UInt256.html))
-variants are available (with identical, `BigInteger`-style interfaces).  It'd be
+variants are available (with identical, `BigInteger`-style interfaces). It'd be
 trivial to offer differently sized integers with the same semantics, as all
 operations are implemented statically in terms of arrays.
 
@@ -22,24 +22,29 @@ Ignoring constant overhead, per-instance memory consumption is identical to
 required to represent a given number - never zero prefixed.
 
 Operation throughput is expected to be significantly higher than OpenJDK's
-`BigInteger` for most operations (often dramatically so).  There are exhaustive
-JMH micro-benchmarks per operation & magnitude in the `bench` subproject.
+`BigInteger` for most operations (often dramatically so). There are exhaustive
+(around 170) JMH micro-benchmarks per operation & magnitude in the `bench`
+subproject.
 
 ![graph](static/uint256.png)
 
+and some updated 2023 benchmarks:
+
+![graph](static/uint256-2023.png)
+
 Each operation's bar represents the average throughput across all of its
 magnitude-specific benchmark cases, relative to identical benchmarks which
-operate on `BigInteger`.  Typically, in the case of `UInt256`, there'd be
+operate on `BigInteger`. Typically, in the case of `UInt256`, there'd be
 separate cases for one word, two words, four words (half) and 8 words (full),
 each operating on a range of similarly wide values.
 
 Erring on the side of fairness, the `BigInteger` reference benchmarks only
-include the cost of constraining the result within the maximum width _if the
-operation will overflow_.  As this particular approach requires a degree of
-foreknowledge that likely exists only in a minority of real-life use cases,
-relative throughput may be significantly improved from that depicted.
+include the cost of constraining the result within the maximum width if the
+operation _will definitely_ overflow. As this approach requires a degree of
+foreknowledge present in few real-life use cases, relative throughput
+may be significantly improved from that depicted.
 
-The -10% `multiply` disparity above is due to HotSpot's intrinsification of
+The `multiply` disparity above is due to HotSpot's intrinsification of
 `BigInteger.multiplyToLen`, a private method used by `BigInteger.multiply` (and
 `pow`, by association) - obviously not an optimization strategy available to
 library code.
