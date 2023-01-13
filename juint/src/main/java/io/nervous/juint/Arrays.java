@@ -179,7 +179,6 @@ final class Arrays {
       out[i]          = v;
       return out;
     }
-
     return stripLeadingZeroes(a, 1);
   }
 
@@ -187,11 +186,9 @@ final class Arrays {
     final int i = bit >>> 5, alen = a.length;
 
     if(i < alen - 1) {
-      final int j = alen - i - 1, v = a[j] ^ (1 << (bit & 31));
-      if(v == a[j])
-        return a;
       final int[] out = copyOf(a, alen);
-      out[j]          = v;
+      final int j     = alen - i - 1;
+      out[j]         ^= (1 << (bit & 31));
       return out;
     }
 
