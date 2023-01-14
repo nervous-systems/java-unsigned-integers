@@ -53,10 +53,10 @@ if __name__ == '__main__':
     ax.spines['bottom'].set_visible(False)
     ax.spines['top']   .set_visible(False)
 
-  axhi.tick_params(labeltop='off', top='off', bottom='off')
+  axhi.tick_params(labeltop=False, top=False, bottom=False)
 
-  axlo.set_ylim((mmin, 50))
-  axhi.set_ylim((200,  mmax))
+  axlo.set_ylim((mmin, 75))
+  axhi.set_ylim((300,  mmax))
 
   rects = []
   for (i, (tag, xs)) in enumerate(sorted(data.items(), key=lambda t: t[0])):
@@ -65,8 +65,8 @@ if __name__ == '__main__':
     axhi.bar(ind + (i * width), list(zip(*xs))[1], width, color=color)
     rects.append((r, tag))
 
-  axhi.set_title("UInt256 Throughput Increase\nvs. OpenJDK's BigInteger")
-  axlo.set_xticks(ind + width / 2)
+  axhi.set_title("UInt256 Throughput Increase\nvs. Apache Tuweni's UInt256")
+  axlo.set_xticks(ind)
   axlo.set_xticklabels([k for (k, _) in list(data.values())[0]], rotation=90)
 
   def yformat(v, pos):
@@ -76,14 +76,11 @@ if __name__ == '__main__':
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(yformat))
     ax.tick_params(axis='y', left='off')
 
-  axlo.tick_params(axis='x', bottom='off', top=False)
-  axhi.legend(
-    *list(zip(*tuple((r[0], l) for (r, l) in rects))),
-    frameon=False)
+  axlo.tick_params(axis='x', bottom=False, top=False)
 
   axlo.axhline(0, color='k')
-  axlo.axhline(50, linestyle=':', color='silver')
-  axhi.axhline(200, linestyle=':', color='silver')
+  axlo.axhline(75, linestyle=':', color='silver')
+  axhi.axhline(300, linestyle=':', color='silver')
 
   d  = .015
   kw = dict(transform=axhi.transAxes, color='k', clip_on=False)

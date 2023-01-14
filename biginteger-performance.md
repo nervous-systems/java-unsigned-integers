@@ -32,7 +32,7 @@ be a problem.
 
 Each bar is an aggregate of around 10 JMH microbenchmarks (170 altogether) per
 operation, performed with numbers of different magnitudes. With the generosity
-of a dying aunt, I only % 2<sup>256</sup> the `BigInteger`instance when it's known that
+of a dying aunt, I only mod 2<sup>256</sup> the `BigInteger`instance when it's known that
 it's exceeeded the desired capacity &mdash; mostly not how things work in
 real life, when dealing with arbitrary values. So, these are worst-case
 speedups.
@@ -143,9 +143,9 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
 If the bit is out of bounds, and I'm reading right, it's _growing_ the integer
 array to a size bounded by 2<sup>32</sup> / 32 (approx 10<sup>8</sup>, the biblical lower
 bound on the number of angels[^1]), to
-"clear" a bit which wouldn't otherwise exist? Then stripping all of the leading
+"clear" a bit which wouldn't otherwise exist &mdash; then stripping all of the leading
 zeroes in the `int[]` constructor used by `valueOf`, resulting in exactly the
-same number! Absolutely classic stuff. I was keen to see how OpenJDK 19 had sped
+same number! You don't see this kind of thing every day, top class stuff. I was keen to see how OpenJDK 19 had sped
 this up, but it's doing _exactly_ the same thing! The speedup must come from
 some ancillary method/s (e.g. `getInt`, `valueOf`, etc.), overall runtime
 optimizations, or some combination. Pandaemonium.  Let's take a look at throughput graph
@@ -215,7 +215,8 @@ final class Arrays {
 In general, there are some speedups to be had by closely coupling the
 zero-stripping code with the array arithmetic, as we often know accidentally
 (e.g. if there's a carry left over), or with a cheap check, whether we need to
-scan for leading zeroes or not (as we saw with `clearBit`.  We use this to our advantage in `flipBit`, also, and gain a `150%+` speedup:
+scan for leading zeroes or not (as we saw with `clearBit`. We use this to our
+advantage in `flipBit`, also, and gain a `150%+` speedup:
 
 ```java
 final class Arrays {
@@ -248,7 +249,7 @@ take a look at `toString`.
 
 `toString` accepts a radix in which to represent the number, so it does a bunch
 of `divideAndRemainder` calls, and despite both implementing Knuth's Algorithm
-D, division is substantially faster in `UInt256`, which probably accounts for a
+D, division is substantially faster in `UInt256` &mdash; which probably accounts for a
 large degree of the disparity.
 
 ```java
@@ -273,7 +274,7 @@ public abstract class UInt<T extends UInt>
 }
 ```
 
-I think these length checks, absent in `BigInteger` probably account for the
+I think these length checks (absent in `BigInteger`) probably account for the
 rest, in the lower-magnitude test cases. `BigInteger` immediately falls back to
 Schoenhage radix conversion if the number within some range (2<sup>256</sup> is
 comfortably within this range), which is what `StringUtil.toString` does, above.
@@ -306,11 +307,12 @@ public final class UInt256 implements UInt256Value<UInt256> {
 ```
 
 are trivial to unroll, and it seems unconcerned, generally, with leading zeroes.
-This comes at some cost &mdash; if you wanted to implement
-`UInt512`, you'd have to copy and paste all of this code.  Although, I'll happily
-take some 20%-50% losses along with some 400%-600% gains.
+This comes at some cost &mdash; if you wanted to implement `UInt512`, you'd have
+to copy and paste all of this code. Although, against that trade-off, I'll
+happily take some 25%-50% losses along with some 300%-450% gains.
 
-Thanks for reading.  FIN.
-<p align="center">
-<a href="https://github.com/nervous-systems/java-unsigned-integers"><img width="100px" src="static/github-mark.png"/></a>
-</p>
+Thanks for reading! Open an issue or a PR if you have ideas about further
+speedups.
+<p align="center"> <a
+href="https://github.com/nervous-systems/java-unsigned-integers"><img
+width="100px" src="static/github-mark.png"/></a> </p>
