@@ -32,6 +32,8 @@ and some updated 2023 benchmarks:
 
 ![graph](static/uint256-2023.png)
 
+![graph](static/uint256-tuweni.png)
+
 Each operation's bar represents the average throughput across all of its
 magnitude-specific benchmark cases, relative to identical benchmarks which
 operate on `BigInteger`. Typically, in the case of `UInt256`, there'd be
