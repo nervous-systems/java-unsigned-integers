@@ -47,33 +47,52 @@ if __name__ == '__main__':
 
   rc('font', family=FONT)
 
-  (fig, ax) = plt.subplots()
+  (fig, (axhi, axlo)) = plt.subplots(2, 1, sharex=True)
 
-  ax.tick_params(labeltop=False, top=False, bottom=False)
+  for ax in (axhi, axlo):
+    ax.spines['bottom'].set_visible(False)
+    ax.spines['top']   .set_visible(False)
+
+  axhi.tick_params(labeltop='off', top='off', bottom='off')
+
+  axlo.set_ylim((mmin, 50))
+  axhi.set_ylim((200,  mmax))
 
   rects = []
   for (i, (tag, xs)) in enumerate(sorted(data.items(), key=lambda t: t[0])):
     color = next(colors)
-    r     = ax.bar(ind + (i * width), list(zip(*xs))[1], width, color=color)
+    r     = axlo.bar(ind + (i * width), list(zip(*xs))[1], width, color=color)
+    axhi.bar(ind + (i * width), list(zip(*xs))[1], width, color=color)
     rects.append((r, tag))
 
-  ax.set_title("UInt256 Throughput Increase\nvs. OpenJDK's BigInteger")
-  labels = list(zip(*list(data.values())[0]))[0]
-  ax.set_xticks(ind, top=False)
-  ax.set_xticklabels(labels, rotation=90)
-  ax.tick_params(axis='x', top=False, labeltop=False)
+  axhi.set_title("UInt256 Throughput Increase\nvs. OpenJDK's BigInteger")
+  axlo.set_xticks(ind + width / 2)
+  axlo.set_xticklabels([k for (k, _) in list(data.values())[0]], rotation=90)
 
   def yformat(v, pos):
     return '%s%d%% ' % ('+' if 0 < v else '', v)
 
-  ax.yaxis.set_major_formatter(ticker.FuncFormatter(yformat))
-  ax.spines[['top']].set_visible(False)
+  for ax in (axlo, axhi):
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(yformat))
+    ax.tick_params(axis='y', left='off')
 
-  ax.legend(
-    *zip(*tuple((r[0], l) for (r, l) in rects)),
+  axlo.tick_params(axis='x', bottom='off', top=False)
+  axhi.legend(
+    *list(zip(*tuple((r[0], l) for (r, l) in rects))),
     frameon=False)
 
-  ax.axhline(0, color='k')
+  axlo.axhline(0, color='k')
+  axlo.axhline(50, linestyle=':', color='silver')
+  axhi.axhline(200, linestyle=':', color='silver')
+
+  d  = .015
+  kw = dict(transform=axhi.transAxes, color='k', clip_on=False)
+  axhi.plot((-d, +d),       (-d, +d), **kw)
+  axhi.plot((1 - d, 1 + d), (-d, +d), **kw)
+
+  kw.update(transform=axlo.transAxes)
+  axlo.plot((-d, +d),       (1 - d, 1 + d), **kw)
+  axlo.plot((1 - d, 1 + d), (1 - d, 1 + d), **kw)
 
   plt.tight_layout()
   plt.savefig('out.png', transparent=True)
