@@ -9,84 +9,84 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 public class Divide {
   @Benchmark
-  public void divmod_halfHalf(UIntState s, Blackhole b) {
+  public void divide_halfHalf(UIntState s, Blackhole b) {
     for(int i = 0; i < s.half.length; i++)
-      b.consume(s.half[0].divmod(s.half[i]));
+      b.consume(s.half[0].divide(s.half[i]));
   }
 
   @Benchmark
-  public void divmod_halfHalf_ref(BigState s, Blackhole b) {
+  public void divide_halfHalf_ref(BigState s, Blackhole b) {
     for(int i = 0; i < s.half.length; i++)
-      b.consume(s.half[0].divideAndRemainder(s.half[i]));
+      b.consume(s.half[0].divide(s.half[i]));
   }
 
   @Benchmark
-  public void divmod_maxHalf(UIntState s, Blackhole b) {
+  public void divide_maxHalf(UIntState s, Blackhole b) {
     for(int i = 0; i < s.half.length; i++)
-      b.consume(s.max.divmod(s.half[i]));
+      b.consume(s.max.divide(s.half[i]));
   }
 
   @Benchmark
-  public void divmod_maxHalf_ref(BigState s, Blackhole b) {
+  public void divide_maxHalf_ref(BigState s, Blackhole b) {
     for(int i = 0; i < s.half.length; i++)
-      b.consume(s.max.divideAndRemainder(s.half[i]));
+      b.consume(s.max.divide(s.half[i]));
   }
 
   @Benchmark
-  public void divmod_maxMax(UIntState s, Blackhole b) {
-    b.consume(s.max.divmod(s.max.subtract(s.one)));
+  public void divide_maxMax(UIntState s, Blackhole b) {
+    b.consume(s.max.divide(s.max.subtract(s.one)));
   }
 
   @Benchmark
-  public void divmod_maxMax_ref(BigState s, Blackhole b) {
-    b.consume(s.max.divideAndRemainder(s.max.subtract(s.one)));
+  public void divide_maxMax_ref(BigState s, Blackhole b) {
+    b.consume(s.max.divide(s.max.subtract(s.one)));
   }
 
   @Benchmark
-  public void divmod_max1w(UIntState s, Blackhole b) {
+  public void divide_max1w(UIntState s, Blackhole b) {
     for(int i = 0; i < s.onew.length; i++)
-      b.consume(s.max.divmod(s.onew[i]));
+      b.consume(s.max.divide(s.onew[i]));
   }
 
   @Benchmark
-  public void divmod_max1w_ref(BigState s, Blackhole b) {
+  public void divide_max1w_ref(BigState s, Blackhole b) {
     for(int i = 0; i < s.onew.length; i++)
-      b.consume(s.max.divideAndRemainder(s.onew[i]));
+      b.consume(s.max.divide(s.onew[i]));
   }
 
   @Benchmark
-  public void divmod_max2w(UIntState s, Blackhole b) {
+  public void divide_max2w(UIntState s, Blackhole b) {
     for(int i = 0; i < s.twow.length; i++)
-      b.consume(s.max.divmod(s.twow[i]));
+      b.consume(s.max.divide(s.twow[i]));
   }
 
   @Benchmark
-  public void divmod_max2w_ref(BigState s, Blackhole b) {
+  public void divide_max2w_ref(BigState s, Blackhole b) {
     for(int i = 0; i < s.twow.length; i++)
-      b.consume(s.max.divideAndRemainder(s.twow[i]));
+      b.consume(s.max.divide(s.twow[i]));
   }
 
   @Benchmark
-  public void divmod_half1w(UIntState s, Blackhole b) {
+  public void divide_half1w(UIntState s, Blackhole b) {
     for(int i = 0; i < s.half.length; i++)
-      b.consume(s.half[i].divmod(s.onew[i]));
+      b.consume(s.half[i].divide(s.onew[i]));
   }
 
   @Benchmark
-  public void divmod_half1w_ref(BigState s, Blackhole b) {
+  public void divide_half1w_ref(BigState s, Blackhole b) {
     for(int i = 0; i < s.half.length; i++)
-      b.consume(s.half[i].divideAndRemainder(s.onew[i]));
+      b.consume(s.half[i].divide(s.onew[i]));
   }
 
   @Benchmark
-  public void divmod_1w1w(UIntState s, Blackhole b) {
+  public void divide_1w1w(UIntState s, Blackhole b) {
     for(int i = 0; i < s.onew.length; i++)
-      b.consume(s.onew[i].divmod(s.onew[i].subtract(s.one)));
+      b.consume(s.onew[i].divide(s.onew[i].subtract(s.one)));
   }
 
   @Benchmark
-  public void divmod_1w1_ref(BigState s, Blackhole b) {
+  public void divide_1w1_ref(BigState s, Blackhole b) {
     for(int i = 0; i < s.onew.length; i++)
-      b.consume(s.onew[i].divideAndRemainder(s.onew[i].subtract(s.one)));
+      b.consume(s.onew[i].divide(s.onew[i].subtract(s.one)));
   }
 }

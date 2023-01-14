@@ -31,26 +31,6 @@ public class Misc {
   }
 
   @Benchmark
-  public void toString_max2(UIntState s, Blackhole b) {
-    b.consume(s.max.toString(2));
-  }
-
-  @Benchmark
-  public void toString_max2_ref(BigState s, Blackhole b) {
-    b.consume(s.max.toString(2));
-  }
-
-  @Benchmark
-  public void toString_half16(UIntState s, Blackhole b) {
-    b.consume(s.half[0].toString(16));
-  }
-
-  @Benchmark
-  public void toString_half6_ref(BigState s, Blackhole b) {
-    b.consume(s.half[0].toString(16));
-  }
-
-  @Benchmark
   public void toString_1w10(UIntState s, Blackhole b) {
     for(int i = 0; i < s.onew.length; i++)
       b.consume(s.onew[i].toString());

@@ -57,7 +57,7 @@ if __name__ == '__main__':
     r     = ax.bar(ind + (i * width), list(zip(*xs))[1], width, color=color)
     rects.append((r, tag))
 
-  ax.set_title("UInt256 Throughput Increase\nvs. OpenJDK's BigInteger")
+  ax.set_title("UInt256 Throughput Increase\nvs. Tuweni's UInt256")
   labels = list(zip(*list(data.values())[0]))[0]
   ax.set_xticks(np.arange(len(labels)), top=False)
   ax.set_xticklabels(labels, rotation=90)
@@ -69,9 +69,9 @@ if __name__ == '__main__':
   ax.yaxis.set_major_formatter(ticker.FuncFormatter(yformat))
   ax.spines[['top']].set_visible(False)
 
-  ax.legend(
-    *zip(*tuple((r[0], l) for (r, l) in rects)),
-    frameon=False)
+  #ax.legend(
+  #  *zip(*tuple((r[0], l) for (r, l) in rects)),
+  #  frameon=False)
 
   ax.axhline(0, color='k')
 

@@ -32,12 +32,16 @@
       <artifactId>juint</artifactId>
       <version>0.1.0</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.tuweni</groupId>
+      <artifactId>tuweni-units</artifactId>
+      <version>2.2.0</version>
+    </dependency>
   </dependencies>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <jmh.version>1.19</jmh.version>
+    <jmh.version>1.35</jmh.version>
     <javac.target>1.8</javac.target>
     <uberjar.name>benchmarks</uberjar.name>
   </properties>
