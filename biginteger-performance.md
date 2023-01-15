@@ -180,7 +180,7 @@ public class BigInteger extends Number implements Comparable<BigInteger> {
 }
 ```
 
-This is a little goofy &mdash; if the corresponding integer (`n >>> 5`) exists
+This is a little goofy &mdash; if the corresponding integer exists
 in the integer array, why not check if the bit is _already_ set before doing any
 allocating? Compare:
 
@@ -284,8 +284,7 @@ Anything we can do to avoid that'll be a big win.
 
 Someone recently pointed me at [Apache Tuewni's UInt256
 implementation](https://github.com/apache/incubator-tuweni/blob/main/units/src/main/java/org/apache/tuweni/units/bigints/UInt256.java).
-It looked a little eccentric, but I wanted to benchmark it regardless.  I should have
-broken the Y-axis here also, but I lack the energy of my 33 year old self.
+It looked a little eccentric, but I wanted to benchmark it regardless.
 
 ![graph](static/uint256-tuweni.png)
 
