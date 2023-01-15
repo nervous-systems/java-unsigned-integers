@@ -566,7 +566,7 @@ final class Arrays {
 
   static int[] pow(int[] a, final int lo, int exp, final int maxWidth) {
     if(exp == 2)
-      return multiply(a, a, maxWidth);
+      return square(a, maxWidth);
 
     long shift = (long)lo * exp;
     if(Integer.MAX_VALUE < shift)
@@ -605,7 +605,7 @@ final class Arrays {
       if((exp & 1) == 1)
         out = multiply(out, a, maxWidth);
       if((exp >>>= 1) != 0)
-        a = multiply(a, a, maxWidth);
+        a = square(a, maxWidth);
     }
 
     return 0 < lplaces ? lshift(out, lplaces, maxWidth) : out;
